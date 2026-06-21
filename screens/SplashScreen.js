@@ -27,7 +27,7 @@ export default function SplashScreen() {
 
   return (
     <LinearGradient
-      colors={['#6C4DDA', '#4B2FAE', '#3A2390']}
+      colors={['#8CCBF7', '#74896D', '#5A6B56']}
       locations={[0, 0.55, 1]}
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 0.8 }}
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: Typography.display,
     fontSize: Typography.size19,
-    color: Colors.primaryPurple,
+    color: '#74896D',
   },
   footnote: {
     fontSize: Typography.size13,

@@ -9,7 +9,7 @@ export default function StoryScreen() {
 
   return (
     <LinearGradient
-      colors={['#2C2150', '#3A2675', '#4B2FAE']}
+      colors={['#5A6B56', '#647A5E', '#74896D']}
       locations={[0, 0.6, 1]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.88)',
   },
   highlight: {
-    color: Colors.highlightCream,
+    color: '#FEF5CD',
     fontFamily: Typography.bodyBold,
   },
   drCard: {
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.85)',
   },
   button: {
-    backgroundColor: Colors.gold,
+    backgroundColor: '#F9DD57',
     paddingVertical: 18,
     borderRadius: 18,
     alignItems: 'center',

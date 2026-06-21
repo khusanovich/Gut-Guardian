@@ -1,25 +1,25 @@
 export const Colors = {
-  // Primary purple
-  primaryPurple: '#4B2FAE',
-  purpleLight: '#6C4DDA',
-  purpleLighter: '#9B7BF0',
-  purpleTintBg: '#EFEAFB',
-  deepIndigo: '#2C2150',
-  indigoBg2: '#241B3A',
-  indigoBg3: '#3A2675',
+  // Primary green (Viatolea)
+  primaryPurple: '#74896D', // Green RGB(116, 137, 109)
+  purpleLight: '#8CCBF7', // Blue RGB(140, 203, 247)
+  purpleLighter: '#A8D9FA', // Lighter blue
+  purpleTintBg: '#F2F8F2', // Light green RGB(242, 248, 242)
+  deepIndigo: '#5A6B56', // Darker green
+  indigoBg2: '#4A5A47', // Even darker green
+  indigoBg3: '#647A5E', // Mid green
 
-  // Gold
-  gold: '#F2A640',
-  goldDark: '#E8833A',
-  goldText: '#C9821E',
-  goldTintBg: '#FCEFD9',
-  highlightCream: '#FFD9A0',
+  // Yellow (Viatolea)
+  gold: '#F9DD57', // Yellow RGB(249, 221, 87)
+  goldDark: '#F4D03F',
+  goldText: '#C9A61E',
+  goldTintBg: '#FEF9E7',
+  highlightCream: '#FEF5CD',
 
-  // Green
-  green: '#159E72',
-  greenDark: '#0E7A57',
-  greenDark2: '#0F8460',
-  greenTintBg: '#E0F3EC',
+  // Green (success states)
+  green: '#74896D', // Using primary green
+  greenDark: '#5A6B56',
+  greenDark2: '#647A5E',
+  greenTintBg: '#F2F8F2', // Light green
 
   // Red/coral
   red: '#E2664B',
@@ -27,15 +27,15 @@ export const Colors = {
   redTintBg: '#FBE6E1',
 
   // App backgrounds
-  appBg: '#FBF6EE',
+  appBg: '#F2F8F2', // Light green RGB(242, 248, 242)
   textPrimary: '#2A2140',
   textMuted: '#6B6480',
   textFaint: '#B6AEC4',
 
   // Borders
-  border: '#EAE4DA',
-  border2: '#EEE7DC',
-  border3: '#F1EDE4',
+  border: '#D4E0D3',
+  border2: '#E2EBE1',
+  border3: '#EAF2E9',
 
   // Utility
   white: '#FFFFFF',
