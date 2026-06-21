@@ -128,13 +128,23 @@ export const AppProvider = ({ children }) => {
 
   const back = () => {
     setState((prev) => {
-      const screenMap = {
-        home: 'home',
-        investigate: 'log',
-        case: 'casefile',
-        profile: 'profile',
+      // Map screens to their parent/return screen
+      const backMap = {
+        log: 'home',
+        evidence: prev.activeTab === 'case' ? 'casefile' :
+                  prev.activeTab === 'profile' ? 'profile' : 'home',
+        feedback: prev.activeTab === 'case' ? 'casefile' : 'profile',
+        solved: 'profile',
       };
-      return { ...prev, screen: screenMap[prev.activeTab] || 'home' };
+
+      const targetScreen = backMap[prev.screen];
+
+      if (targetScreen) {
+        return { ...prev, screen: targetScreen };
+      }
+
+      // Default: go to home
+      return { ...prev, screen: 'home', activeTab: 'home' };
     });
   };
 
