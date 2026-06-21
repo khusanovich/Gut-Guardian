@@ -63,7 +63,7 @@ export default function CaseFileScreen() {
         activeOpacity={0.9}
       >
         <LinearGradient
-          colors={['#2C2150', '#4B2FAE']}
+          colors={['#5A6B56', '#74896D']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.evidenceGradient}

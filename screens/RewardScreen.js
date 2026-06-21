@@ -71,7 +71,7 @@ export default function RewardScreen() {
 
   return (
     <LinearGradient
-      colors={['#6C4DDA', '#4B2FAE']}
+      colors={['#8CCBF7', '#74896D']}
       locations={[0, 0.7]}
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 0.7 }}

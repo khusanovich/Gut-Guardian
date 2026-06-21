@@ -24,7 +24,7 @@ export default function HomeScreen() {
       {/* Header */}
       <View style={styles.header}>
         <LinearGradient
-          colors={['#6C4DDA', '#4B2FAE']}
+          colors={['#8CCBF7', '#74896D']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.avatar}
@@ -59,7 +59,7 @@ export default function HomeScreen() {
         activeOpacity={0.9}
       >
         <LinearGradient
-          colors={['#F2A640', '#E8833A']}
+          colors={['#F9DD57', '#F4D03F']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.missionGradient}

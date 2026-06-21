@@ -51,7 +51,7 @@ export default function LogMealScreen() {
               >
                 {mealType === m.type ? (
                   <LinearGradient
-                    colors={['#6C4DDA', '#4B2FAE']}
+                    colors={['#8CCBF7', '#74896D']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                     style={styles.pillGradient}
@@ -151,7 +151,7 @@ export default function LogMealScreen() {
           activeOpacity={0.9}
         >
           <LinearGradient
-            colors={['#6C4DDA', '#4B2FAE']}
+            colors={['#8CCBF7', '#74896D']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.submitGradient}

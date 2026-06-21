@@ -66,7 +66,7 @@ export default function FeedbackScreen() {
           </Text>
           <TouchableOpacity style={styles.doneButton} onPress={back} activeOpacity={0.9}>
             <LinearGradient
-              colors={['#6C4DDA', '#4B2FAE']}
+              colors={['#8CCBF7', '#74896D']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.doneGradient}
@@ -137,7 +137,7 @@ export default function FeedbackScreen() {
               >
                 {fbHelp === opt.value ? (
                   <LinearGradient
-                    colors={['#6C4DDA', '#4B2FAE']}
+                    colors={['#8CCBF7', '#74896D']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                     style={styles.segmentGradient}
@@ -168,7 +168,7 @@ export default function FeedbackScreen() {
               >
                 {fbUse === opt.value ? (
                   <LinearGradient
-                    colors={['#6C4DDA', '#4B2FAE']}
+                    colors={['#8CCBF7', '#74896D']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                     style={styles.segmentGradient}
@@ -203,7 +203,7 @@ export default function FeedbackScreen() {
           activeOpacity={0.9}
         >
           <LinearGradient
-            colors={['#6C4DDA', '#4B2FAE']}
+            colors={['#8CCBF7', '#74896D']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.submitGradient}

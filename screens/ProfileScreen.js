@@ -30,7 +30,7 @@ export default function ProfileScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Animated.View style={{ transform: [{ translateY: floatAnim }] }}>
         <LinearGradient
-          colors={['#6C4DDA', '#4B2FAE']}
+          colors={['#8CCBF7', '#74896D']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.avatar}
