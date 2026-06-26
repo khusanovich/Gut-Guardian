@@ -6,6 +6,14 @@ A React Native (Expo) mobile app that turns gut-health tracking into a detective
 
 ---
 
+## 🚀 Try It Now (No Installation Required!)
+
+**Live Demo:** **[https://gut-guardian.pages.dev](https://gut-guardian.pages.dev)**
+
+Open the link above on any device (phone, tablet, or desktop) - works in any modern browser. No app store download needed!
+
+---
+
 ## 📱 Quick Start
 
 ### Prerequisites
