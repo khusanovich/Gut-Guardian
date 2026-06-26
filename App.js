@@ -39,10 +39,19 @@ export default function App() {
         setFontsLoaded(true);
       } catch (error) {
         console.error('Error loading fonts:', error);
+        // On web, fallback fonts will be used
+        setFontsLoaded(true);
       }
     }
 
     loadFonts();
+
+    // Timeout to prevent infinite loading on web
+    const timeout = setTimeout(() => {
+      setFontsLoaded(true);
+    }, 3000);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   if (!fontsLoaded) {
