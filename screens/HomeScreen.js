@@ -4,10 +4,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, Typography, Spacing, Shadows } from '../constants/theme';
 import { useApp } from '../context/AppContext';
 import GuideCharacter from '../components/GuideCharacter';
+import TodaysMeals from '../components/TodaysMeals';
 
 export default function HomeScreen() {
-  const { state, go, dismissGuide, markDayComplete } = useApp();
-  const { detectiveName, xp, xpMax, level, streak, showGuide, tutorialStep, day } = state;
+  const { state, go, dismissGuide, markDayComplete, editMealSymptoms } = useApp();
+  const { detectiveName, xp, xpMax, level, streak, showGuide, tutorialStep, day, loggedMeals } = state;
+
+  // Get today's meals
+  const todaysMeals = loggedMeals.filter(meal => meal.day === day);
 
   const xpPct = (xp / xpMax) * 100;
   const xpToGo = Math.max(0, xpMax - xp);
@@ -92,6 +96,14 @@ export default function HomeScreen() {
           </View>
         </LinearGradient>
       </TouchableOpacity>
+
+      {/* Today's Meals - for delayed symptom logging */}
+      {todaysMeals.length > 0 && (
+        <TodaysMeals
+          meals={todaysMeals}
+          onEditMeal={editMealSymptoms}
+        />
+      )}
 
       {/* Quick Tiles */}
       <View style={styles.tilesGrid}>

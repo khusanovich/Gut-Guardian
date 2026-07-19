@@ -7,7 +7,9 @@ import GuideCharacter from '../components/GuideCharacter';
 
 export default function LogMealScreen() {
   const { state, back, selectMealType, toggleSymptom, setSeverity, submitLog, updateState } = useApp();
-  const { mealType, mealText, symptoms, severity } = state;
+  const { mealType, mealText, symptoms, severity, editingMealId } = state;
+
+  const isEditing = !!editingMealId;
 
   const mealTypes = [
     { type: 'Breakfast', icon: '🍳' },
@@ -37,8 +39,16 @@ export default function LogMealScreen() {
         <TouchableOpacity style={styles.backButton} onPress={back} activeOpacity={0.7}>
           <Text style={styles.backText}>‹</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Log Your Meal</Text>
+        <Text style={styles.headerTitle}>
+          {isEditing ? 'Add Symptoms' : 'Log Your Meal'}
+        </Text>
       </View>
+
+      {isEditing && (
+        <View style={styles.editingBanner}>
+          <Text style={styles.editingText}>💡 Adding delayed symptoms to {mealType}</Text>
+        </View>
+      )}
 
       <ScrollView contentContainerStyle={styles.content}>
         {/* Meal Type */}
@@ -162,12 +172,16 @@ export default function LogMealScreen() {
             end={{ x: 1, y: 1 }}
             style={styles.submitGradient}
           >
-            <Text style={styles.submitText}>Submit · +10 XP</Text>
+            <Text style={styles.submitText}>
+              {isEditing ? 'Update · +5 XP' : 'Submit · +10 XP'}
+            </Text>
           </LinearGradient>
         </TouchableOpacity>
 
         <Text style={styles.footnote}>
-          Every log brings you closer to solving the mystery
+          {isEditing
+            ? 'Delayed symptom tracking helps find patterns'
+            : 'Every log brings you closer to solving the mystery'}
         </Text>
       </ScrollView>
     </View>
@@ -178,6 +192,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.appBg,
+  },
+  editingBanner: {
+    backgroundColor: Colors.goldTintBg,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.gold,
+  },
+  editingText: {
+    fontFamily: Typography.bodySemiBold,
+    fontSize: Typography.size14,
+    color: Colors.textPrimary,
+    textAlign: 'center',
   },
   header: {
     flexDirection: 'row',

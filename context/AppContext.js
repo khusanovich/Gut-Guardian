@@ -41,6 +41,10 @@ export const AppProvider = ({ children }) => {
     // Calendar state
     startDate: null,
     completedDays: [],
+    // Logged meals with timestamps
+    loggedMeals: [],
+    // Currently editing meal ID (for delayed symptom logging)
+    editingMealId: null,
   });
 
   const updateState = (updates) => {
@@ -96,11 +100,42 @@ export const AppProvider = ({ children }) => {
       const clue = noSym
         ? `No symptoms after ${meal} today`
         : `${real[0]} after ${meal}`;
+
+      // If editing existing meal, update it
+      if (prev.editingMealId) {
+        const updatedMeals = prev.loggedMeals.map(m =>
+          m.id === prev.editingMealId
+            ? { ...m, symptoms: prev.symptoms, severity: prev.severity, updatedAt: new Date().toISOString() }
+            : m
+        );
+
+        return {
+          ...prev,
+          screen: 'reward',
+          xp: Math.min(prev.xpMax, prev.xp + 5), // Less XP for updates
+          loggedMeals: updatedMeals,
+          editingMealId: null,
+          reward: { xp: 5, clue: `Updated symptoms for ${meal}` },
+        };
+      }
+
+      // Create new meal log
+      const newMeal = {
+        id: Date.now().toString(),
+        mealType: prev.mealType,
+        mealText: prev.mealText,
+        symptoms: prev.symptoms,
+        severity: prev.severity,
+        timestamp: new Date().toISOString(),
+        day: prev.day,
+      };
+
       return {
         ...prev,
         screen: 'reward',
         xp: Math.min(prev.xpMax, prev.xp + 10),
         entries: prev.entries + 1,
+        loggedMeals: [...prev.loggedMeals, newMeal],
         reward: { xp: 10, clue },
       };
     });
@@ -180,6 +215,24 @@ export const AppProvider = ({ children }) => {
     setState((prev) => ({ ...prev, startDate: date }));
   };
 
+  const editMealSymptoms = (mealId) => {
+    setState((prev) => {
+      const meal = prev.loggedMeals.find(m => m.id === mealId);
+      if (!meal) return prev;
+
+      return {
+        ...prev,
+        screen: 'log',
+        activeTab: 'investigate',
+        editingMealId: mealId,
+        mealType: meal.mealType,
+        mealText: meal.mealText,
+        symptoms: meal.symptoms || [],
+        severity: meal.severity || 3,
+      };
+    });
+  };
+
   const value = {
     state,
     updateState,
@@ -200,6 +253,7 @@ export const AppProvider = ({ children }) => {
     completeTutorial,
     markDayComplete,
     setStartDate,
+    editMealSymptoms,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
