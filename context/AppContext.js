@@ -138,6 +138,7 @@ export const AppProvider = ({ children }) => {
       // Map screens to their parent/return screen
       const backMap = {
         log: 'home',
+        calendar: 'home',
         evidence: prev.activeTab === 'case' ? 'casefile' :
                   prev.activeTab === 'profile' ? 'profile' : 'home',
         feedback: prev.activeTab === 'case' ? 'casefile' : 'profile',

@@ -14,6 +14,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import EvidenceBoardScreen from '../screens/EvidenceBoardScreen';
 import FeedbackScreen from '../screens/FeedbackScreen';
 import CaseSolvedScreen from '../screens/CaseSolvedScreen';
+import CalendarScreen from '../screens/CalendarScreen';
 
 const BottomNav = () => {
   const { state, nav } = useApp();
@@ -94,6 +95,8 @@ export default function AppNavigator() {
         return <FeedbackScreen />;
       case 'solved':
         return <CaseSolvedScreen />;
+      case 'calendar':
+        return <CalendarScreen />;
       default:
         return <SplashScreen />;
     }

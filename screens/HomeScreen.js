@@ -4,7 +4,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, Typography, Spacing, Shadows } from '../constants/theme';
 import { useApp } from '../context/AppContext';
 import GuideCharacter from '../components/GuideCharacter';
-import CalendarWidget from '../components/CalendarWidget';
 
 export default function HomeScreen() {
   const { state, go, dismissGuide, markDayComplete } = useApp();
@@ -16,9 +15,9 @@ export default function HomeScreen() {
 
   const homeTiles = [
     { label: 'Investigate', sub: 'Log a meal', icon: '🔍', bg: '#EFEAFB', screen: 'log' },
+    { label: 'Calendar', sub: '14-day tracker', icon: '📅', bg: '#E8F5E9', screen: 'calendar' },
     { label: 'Case File', sub: 'Your progress', icon: '🗂️', bg: '#FCEFD9', screen: 'casefile' },
     { label: 'Evidence', sub: 'See the board', icon: '🧩', bg: '#E0F3EC', screen: 'evidence' },
-    { label: 'Avatar', sub: 'Detective profile', icon: '🕵️', bg: '#FBE6E1', screen: 'profile' },
   ];
 
   const guideMessages = {
@@ -41,11 +40,6 @@ export default function HomeScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Guide Character - Always visible, bottom-left */}
       <GuideCharacter message={guideMessages[tutorialStep]} />
-
-      {/* Calendar Widget - Top Right */}
-      <View style={styles.calendarContainer}>
-        <CalendarWidget />
-      </View>
 
       {/* Header */}
       <View style={styles.header}>
@@ -130,12 +124,6 @@ const styles = StyleSheet.create({
     paddingTop: 26,
     paddingBottom: 26,
     gap: 18,
-  },
-  calendarContainer: {
-    position: 'absolute',
-    top: 26,
-    right: 20,
-    zIndex: 100,
   },
   header: {
     flexDirection: 'row',
