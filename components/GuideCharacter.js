@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Animated, TouchableOpacity, Easing, PanResponder } from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing, PanResponder } from 'react-native';
 import { Colors, Typography, Spacing, Shadows } from '../constants/theme';
 
 export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
@@ -138,11 +138,7 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
   // Pan responder for dragging
   const panResponder = React.useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: () => false,
-      onMoveShouldSetPanResponder: (_evt, gestureState) => {
-        // Only start dragging if moved more than 10 pixels to avoid interference with clicks
-        return Math.abs(gestureState.dx) > 10 || Math.abs(gestureState.dy) > 10;
-      },
+      onStartShouldSetPanResponder: () => true,
       onPanResponderGrant: () => {
         pan.setOffset({
           x: pan.x._value,
@@ -154,8 +150,48 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
         [null, { dx: pan.x, dy: pan.y }],
         { useNativeDriver: false }
       ),
-      onPanResponderRelease: () => {
-        pan.flattenOffset();
+      onPanResponderRelease: (_evt, gestureState) => {
+        // If barely moved (less than 5 pixels), treat as click, not drag
+        const didNotMove = Math.abs(gestureState.dx) < 5 && Math.abs(gestureState.dy) < 5;
+
+        if (didNotMove) {
+          // Reset position to before "drag"
+          pan.setOffset({
+            x: pan.x._offset,
+            y: pan.y._offset,
+          });
+          pan.setValue({ x: 0, y: 0 });
+          pan.flattenOffset();
+
+          // Trigger click handler
+          handlePress();
+        } else {
+          // Apply boundary constraints
+          pan.flattenOffset();
+
+          // Get screen dimensions (approximate safe bounds)
+          const maxX = 150;  // Right boundary
+          const minX = -150; // Left boundary
+          const maxY = 200;  // Down boundary
+          const minY = -300; // Up boundary
+
+          let finalX = pan.x._value;
+          let finalY = pan.y._value;
+
+          // Constrain to boundaries
+          if (finalX > maxX) finalX = maxX;
+          if (finalX < minX) finalX = minX;
+          if (finalY > maxY) finalY = maxY;
+          if (finalY < minY) finalY = minY;
+
+          // Animate to constrained position if needed
+          if (finalX !== pan.x._value || finalY !== pan.y._value) {
+            Animated.spring(pan, {
+              toValue: { x: finalX, y: finalY },
+              useNativeDriver: false,
+            }).start();
+          }
+        }
       },
     })
   ).current;
@@ -227,35 +263,30 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
         style={styles.characterContainer}
         {...panResponder.panHandlers}
       >
-        <TouchableOpacity
-          onPress={handlePress}
-          activeOpacity={0.8}
+        <Animated.View
+          style={[
+            styles.character,
+            {
+              transform: [
+                { translateY: Animated.add(characterBounce.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, -20],
+                }), float) },
+                { scale: breathe },
+                { rotate: rotation },
+              ],
+            },
+          ]}
         >
-          <Animated.View
-            style={[
-              styles.character,
-              {
-                transform: [
-                  { translateY: Animated.add(characterBounce.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, -20],
-                  }), float) },
-                  { scale: breathe },
-                  { rotate: rotation },
-                ],
-              },
-            ]}
-          >
-            <Text style={styles.characterEmoji}>🕵️</Text>
+          <Text style={styles.characterEmoji}>🕵️</Text>
 
-            {/* Thinking indicator when bubble hidden */}
-            {!bubbleVisible && (
-              <Animated.View style={styles.thinkingDots}>
-                <Text style={styles.dotsText}>💭</Text>
-              </Animated.View>
-            )}
-          </Animated.View>
-        </TouchableOpacity>
+          {/* Thinking indicator when bubble hidden */}
+          {!bubbleVisible && (
+            <Animated.View style={styles.thinkingDots}>
+              <Text style={styles.dotsText}>💭</Text>
+            </Animated.View>
+          )}
+        </Animated.View>
       </Animated.View>
     </Animated.View>
   );
