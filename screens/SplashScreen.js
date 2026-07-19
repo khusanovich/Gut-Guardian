@@ -101,7 +101,6 @@ export default function SplashScreen() {
       {/* Guide Character */}
       <GuideCharacter
         message="Welcome! I'm your detective guide. Ready to solve your gut health mystery together?"
-        autoHideDelay={3000}
       />
     </LinearGradient>
   );

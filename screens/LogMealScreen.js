@@ -30,7 +30,6 @@ export default function LogMealScreen() {
       {/* Guide Character - Always visible, bottom-left */}
       <GuideCharacter
         message="Fill in your meal details, select any symptoms you experienced, and submit to earn XP!"
-        autoHideDelay={2000}
       />
 
       {/* Header */}

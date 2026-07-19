@@ -67,7 +67,6 @@ export default function StoryScreen() {
       {/* Guide Character */}
       <GuideCharacter
         message="This is your mission briefing! You'll track meals for 14 days. Each entry is a clue to solve your health mystery."
-        autoHideDelay={3000}
       />
     </LinearGradient>
   );

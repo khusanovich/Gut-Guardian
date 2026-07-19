@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Animated, TouchableOpacity, Easing } from 'react-native';
 import { Colors, Typography, Spacing, Shadows } from '../constants/theme';
 
-export default function GuideCharacter({ message, autoHideDelay = 2000 }) {
+export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
   const [bubbleVisible, setBubbleVisible] = React.useState(true);
   const [hasInteracted, setHasInteracted] = React.useState(false);
 

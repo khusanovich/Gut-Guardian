@@ -40,7 +40,7 @@ export default function HomeScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Guide Character - Always visible, bottom-left */}
-      <GuideCharacter message={guideMessages[tutorialStep]} autoHideDelay={2000} />
+      <GuideCharacter message={guideMessages[tutorialStep]} />
 
       {/* Calendar Widget - Top Right */}
       <View style={styles.calendarContainer}>
