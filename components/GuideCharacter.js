@@ -227,16 +227,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 110,
     left: 20,
-    right: 20,
     flexDirection: 'row',
     alignItems: 'flex-end',
     gap: 12,
     zIndex: 1000,
     pointerEvents: 'box-none',
+    maxWidth: '85%',
   },
   characterContainer: {
     position: 'relative',
     pointerEvents: 'auto',
+    flexShrink: 0,
   },
   character: {
     width: 60,
@@ -261,12 +262,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   bubble: {
-    flex: 1,
     backgroundColor: Colors.white,
     borderRadius: 16,
     padding: 14,
     marginRight: 8,
-    maxWidth: '75%',
+    maxWidth: 250,
     ...Shadows.cardMedium,
   },
   arrow: {
