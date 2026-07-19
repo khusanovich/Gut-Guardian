@@ -73,13 +73,13 @@ export default function GuideCharacter({ message, autoHideDelay = 2000 }) {
         Animated.timing(breathe, {
           toValue: 1.08,
           duration: 1500,
-          easing: Easing.inOut(Easing.ease),
+          easing: Easing.bezier(0.42, 0, 0.58, 1),
           useNativeDriver: true,
         }),
         Animated.timing(breathe, {
           toValue: 1,
           duration: 1500,
-          easing: Easing.inOut(Easing.ease),
+          easing: Easing.bezier(0.42, 0, 0.58, 1),
           useNativeDriver: true,
         }),
       ])
@@ -93,13 +93,13 @@ export default function GuideCharacter({ message, autoHideDelay = 2000 }) {
         Animated.timing(float, {
           toValue: -5,
           duration: 2000,
-          easing: Easing.inOut(Easing.sine),
+          easing: Easing.bezier(0.45, 0, 0.55, 1),
           useNativeDriver: true,
         }),
         Animated.timing(float, {
           toValue: 0,
           duration: 2000,
-          easing: Easing.inOut(Easing.sine),
+          easing: Easing.bezier(0.45, 0, 0.55, 1),
           useNativeDriver: true,
         }),
       ])
@@ -225,7 +225,7 @@ export default function GuideCharacter({ message, autoHideDelay = 2000 }) {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 100,
+    bottom: 110,
     left: 20,
     right: 20,
     flexDirection: 'row',

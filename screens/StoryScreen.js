@@ -3,14 +3,15 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, Typography, Spacing, Shadows } from '../constants/theme';
 import { useApp } from '../context/AppContext';
+import GuideCharacter from '../components/GuideCharacter';
 
 export default function StoryScreen() {
   const { go } = useApp();
 
   return (
     <LinearGradient
-      colors={['#5A6B56', '#647A5E', '#74896D']}
-      locations={[0, 0.6, 1]}
+      colors={['#A8E6CF', '#88D498', '#74896D']}
+      locations={[0, 0.5, 1]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}
@@ -52,9 +53,22 @@ export default function StoryScreen() {
           onPress={() => go('home', 'home')}
           activeOpacity={0.9}
         >
-          <Text style={styles.buttonText}>Begin Investigation →</Text>
+          <LinearGradient
+            colors={['#FFE66D', '#F9DD57']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.buttonGradient}
+          >
+            <Text style={styles.buttonText}>Begin Investigation →</Text>
+          </LinearGradient>
         </TouchableOpacity>
       </ScrollView>
+
+      {/* Guide Character */}
+      <GuideCharacter
+        message="This is your mission briefing! You'll track meals for 14 days. Each entry is a clue to solve your health mystery."
+        autoHideDelay={3000}
+      />
     </LinearGradient>
   );
 }
@@ -144,12 +158,14 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.85)',
   },
   button: {
-    backgroundColor: '#F9DD57',
-    paddingVertical: 18,
     borderRadius: 18,
-    alignItems: 'center',
+    overflow: 'hidden',
     marginTop: 6,
     ...Shadows.buttonGold,
+  },
+  buttonGradient: {
+    paddingVertical: 18,
+    alignItems: 'center',
   },
   buttonText: {
     fontFamily: Typography.display,

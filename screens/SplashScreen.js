@@ -3,10 +3,12 @@ import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, Typography, Spacing, Shadows } from '../constants/theme';
 import { useApp } from '../context/AppContext';
+import GuideCharacter from '../components/GuideCharacter';
 
 export default function SplashScreen() {
   const { go } = useApp();
   const floatAnim = useRef(new Animated.Value(0)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     Animated.loop(
@@ -23,11 +25,26 @@ export default function SplashScreen() {
         }),
       ])
     ).start();
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.05,
+          duration: 1500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 1500,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
   }, []);
 
   return (
     <LinearGradient
-      colors={['#8CCBF7', '#74896D', '#5A6B56']}
+      colors={['#A8E6CF', '#74896D', '#5A6B56']}
       locations={[0, 0.55, 1]}
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 0.8 }}
@@ -44,18 +61,22 @@ export default function SplashScreen() {
         <Animated.View
           style={[
             styles.logoContainer,
-            { transform: [{ translateY: floatAnim }] },
+            { transform: [{ translateY: floatAnim }, { scale: pulseAnim }] },
           ]}
         >
           <View style={styles.logoRing}>
             <View style={styles.logoCircle}>
-              <Text style={styles.logoEmoji}>🔍</Text>
+              <Text style={styles.logoEmoji}>🕵️</Text>
             </View>
           </View>
         </Animated.View>
         <View>
           <Text style={styles.title}>Gut Guardian</Text>
-          <Text style={styles.subtitle}>Solve your body's mystery</Text>
+          <Text style={styles.subtitle}>Your 14-Day Health Detective</Text>
+          <View style={styles.featureRow}>
+            <Text style={styles.featureItem}>🍽️ Track Meals</Text>
+            <Text style={styles.featureItem}>🔍 Find Patterns</Text>
+          </View>
         </View>
       </View>
 
@@ -65,10 +86,23 @@ export default function SplashScreen() {
           onPress={() => go('story')}
           activeOpacity={0.9}
         >
-          <Text style={styles.buttonText}>Get Started</Text>
+          <LinearGradient
+            colors={['#FFE66D', '#F9DD57']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.buttonGradient}
+          >
+            <Text style={styles.buttonText}>Start Your Journey ✨</Text>
+          </LinearGradient>
         </TouchableOpacity>
-        <Text style={styles.footnote}>14 days · log meals · crack the case</Text>
+        <Text style={styles.footnote}>14 days to crack your health mystery</Text>
       </View>
+
+      {/* Guide Character */}
+      <GuideCharacter
+        message="Welcome! I'm your detective guide. Ready to solve your gut health mystery together?"
+        autoHideDelay={3000}
+      />
     </LinearGradient>
   );
 }
@@ -164,16 +198,33 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    backgroundColor: Colors.white,
-    paddingVertical: 18,
     borderRadius: 18,
+    overflow: 'hidden',
+    ...Shadows.buttonGold,
+  },
+  buttonGradient: {
+    paddingVertical: 18,
     alignItems: 'center',
-    ...Shadows.buttonPurple,
   },
   buttonText: {
     fontFamily: Typography.display,
     fontSize: Typography.size19,
-    color: '#74896D',
+    color: Colors.textPrimary,
+  },
+  featureRow: {
+    flexDirection: 'row',
+    gap: 16,
+    marginTop: 12,
+    justifyContent: 'center',
+  },
+  featureItem: {
+    fontSize: Typography.size13,
+    fontFamily: Typography.bodySemiBold,
+    color: 'rgba(255,255,255,0.85)',
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
   },
   footnote: {
     fontSize: Typography.size13,
