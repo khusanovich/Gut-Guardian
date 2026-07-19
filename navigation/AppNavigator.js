@@ -70,7 +70,7 @@ export default function AppNavigator() {
   const { screen } = state;
 
   // Screens with bottom navigation
-  const navScreens = ['home', 'casefile', 'profile'];
+  const navScreens = ['home', 'casefile', 'profile', 'log'];
   const showNav = navScreens.includes(screen);
 
   const renderScreen = () => {
