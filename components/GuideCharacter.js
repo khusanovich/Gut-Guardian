@@ -139,7 +139,7 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
   const panResponder = React.useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => false,
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
+      onMoveShouldSetPanResponder: (_evt, gestureState) => {
         // Only start dragging if moved more than 5 pixels
         return Math.abs(gestureState.dx) > 5 || Math.abs(gestureState.dy) > 5;
       },
