@@ -15,7 +15,7 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
   const float = React.useRef(new Animated.Value(0)).current;
 
   // Draggable position
-  const pan = React.useRef(new Animated.ValueXY({ x: 20, y: -110 })).current;
+  const pan = React.useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
 
   // Show bubble animation
   const showBubble = () => {
