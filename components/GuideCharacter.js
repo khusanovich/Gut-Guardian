@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Animated, TouchableOpacity, Easing } from 'react-native';
+import { View, Text, StyleSheet, Animated, TouchableOpacity, Easing, PanResponder } from 'react-native';
 import { Colors, Typography, Spacing, Shadows } from '../constants/theme';
 
 export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
@@ -13,6 +13,9 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
   const characterRotate = React.useRef(new Animated.Value(0)).current;
   const breathe = React.useRef(new Animated.Value(1)).current;
   const float = React.useRef(new Animated.Value(0)).current;
+
+  // Draggable position
+  const pan = React.useRef(new Animated.ValueXY({ x: 20, y: -110 })).current;
 
   // Show bubble animation
   const showBubble = () => {
@@ -132,6 +135,28 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
     ]).start();
   };
 
+  // Pan responder for dragging
+  const panResponder = React.useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        pan.setOffset({
+          x: pan.x._value,
+          y: pan.y._value,
+        });
+        pan.setValue({ x: 0, y: 0 });
+      },
+      onPanResponderMove: Animated.event(
+        [null, { dx: pan.x, dy: pan.y }],
+        { useNativeDriver: false }
+      ),
+      onPanResponderRelease: () => {
+        pan.flattenOffset();
+      },
+    })
+  ).current;
+
   React.useEffect(() => {
     entranceAnimation();
     startBreathing();
@@ -170,7 +195,15 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
   });
 
   return (
-    <View style={styles.container}>
+    <Animated.View
+      style={[
+        styles.container,
+        {
+          transform: [{ translateX: pan.x }, { translateY: pan.y }],
+        },
+      ]}
+      {...panResponder.panHandlers}
+    >
       {/* Speech Bubble */}
       {bubbleVisible && (
         <Animated.View
@@ -218,7 +251,7 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
           )}
         </Animated.View>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 }
 
