@@ -3,10 +3,12 @@ import { View, Text, TouchableOpacity, TextInput, StyleSheet, ScrollView } from 
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, Typography, Spacing, Shadows } from '../constants/theme';
 import { useApp } from '../context/AppContext';
+import GuideCharacter from '../components/GuideCharacter';
 
 export default function LogMealScreen() {
   const { state, back, selectMealType, toggleSymptom, setSeverity, submitLog, updateState } = useApp();
-  const { mealType, mealText, symptoms, severity } = state;
+  const { mealType, mealText, symptoms, severity, showGuide } = state;
+  const [localGuide, setLocalGuide] = React.useState(true);
 
   const mealTypes = [
     { type: 'Breakfast', icon: '🍳' },
@@ -24,8 +26,23 @@ export default function LogMealScreen() {
 
   const severityLevels = [1, 2, 3, 4, 5];
 
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setLocalGuide(false);
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <View style={styles.container}>
+      {/* Guide Character */}
+      {localGuide && (
+        <GuideCharacter
+          message="Fill in your meal details, select any symptoms you experienced, and submit to earn XP!"
+          position="top"
+        />
+      )}
+
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={back} activeOpacity={0.7}>

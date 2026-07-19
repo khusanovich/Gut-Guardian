@@ -34,6 +34,13 @@ export const AppProvider = ({ children }) => {
     fbSuggest: '',
     fbSent: false,
     detectiveName: 'Anna',
+    // Tutorial & Guide state
+    showGuide: true,
+    tutorialStep: 0,
+    tutorialCompleted: false,
+    // Calendar state
+    startDate: null,
+    completedDays: [],
   });
 
   const updateState = (updates) => {
@@ -148,6 +155,30 @@ export const AppProvider = ({ children }) => {
     });
   };
 
+  const dismissGuide = () => {
+    setState((prev) => ({ ...prev, showGuide: false }));
+  };
+
+  const nextTutorialStep = () => {
+    setState((prev) => ({ ...prev, tutorialStep: prev.tutorialStep + 1 }));
+  };
+
+  const completeTutorial = () => {
+    setState((prev) => ({ ...prev, tutorialCompleted: true, showGuide: false }));
+  };
+
+  const markDayComplete = (dayNumber) => {
+    setState((prev) => {
+      const completed = new Set(prev.completedDays);
+      completed.add(dayNumber);
+      return { ...prev, completedDays: Array.from(completed) };
+    });
+  };
+
+  const setStartDate = (date) => {
+    setState((prev) => ({ ...prev, startDate: date }));
+  };
+
   const value = {
     state,
     updateState,
@@ -163,6 +194,11 @@ export const AppProvider = ({ children }) => {
     setFbUse,
     submitFeedback,
     back,
+    dismissGuide,
+    nextTutorialStep,
+    completeTutorial,
+    markDayComplete,
+    setStartDate,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

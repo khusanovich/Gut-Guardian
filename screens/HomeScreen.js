@@ -3,10 +3,12 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors, Typography, Spacing, Shadows } from '../constants/theme';
 import { useApp } from '../context/AppContext';
+import GuideCharacter from '../components/GuideCharacter';
+import CalendarWidget from '../components/CalendarWidget';
 
 export default function HomeScreen() {
-  const { state, go } = useApp();
-  const { detectiveName, xp, xpMax, level, streak } = state;
+  const { state, go, dismissGuide, markDayComplete } = useApp();
+  const { detectiveName, xp, xpMax, level, streak, showGuide, tutorialStep, day } = state;
 
   const xpPct = (xp / xpMax) * 100;
   const xpToGo = Math.max(0, xpMax - xp);
@@ -19,8 +21,34 @@ export default function HomeScreen() {
     { label: 'Avatar', sub: 'Detective profile', icon: '🕵️', bg: '#FBE6E1', screen: 'profile' },
   ];
 
+  const guideMessages = {
+    0: "Welcome, Detective! This is your home base. Track your 14-day investigation here!",
+    1: "See your XP progress below. Complete missions to level up!",
+    2: "Tap 'Today's Mission' to log your meals and earn rewards!",
+  };
+
+  React.useEffect(() => {
+    // Auto-dismiss guide after first visit
+    const timer = setTimeout(() => {
+      if (showGuide && tutorialStep === 0) {
+        dismissGuide();
+      }
+    }, 8000);
+    return () => clearTimeout(timer);
+  }, [showGuide, tutorialStep]);
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      {/* Guide Character */}
+      {showGuide && guideMessages[tutorialStep] && (
+        <GuideCharacter message={guideMessages[tutorialStep]} position="top" />
+      )}
+
+      {/* Calendar Widget - Top Right */}
+      <View style={styles.calendarContainer}>
+        <CalendarWidget />
+      </View>
+
       {/* Header */}
       <View style={styles.header}>
         <LinearGradient
@@ -104,6 +132,12 @@ const styles = StyleSheet.create({
     paddingTop: 26,
     paddingBottom: 26,
     gap: 18,
+  },
+  calendarContainer: {
+    position: 'absolute',
+    top: 26,
+    right: 20,
+    zIndex: 100,
   },
   header: {
     flexDirection: 'row',
