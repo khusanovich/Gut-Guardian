@@ -35,33 +35,35 @@ export default function CalendarScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <LinearGradient
+        colors={['#A8E6CF', '#88D498']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
         <TouchableOpacity style={styles.backButton} onPress={back} activeOpacity={0.7}>
           <Text style={styles.backText}>‹</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>14-Day Investigation</Text>
-      </View>
+      </LinearGradient>
 
       <ScrollView contentContainerStyle={styles.content}>
         {/* Progress Card */}
-        <LinearGradient
-          colors={['#A8E6CF', '#88D498']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.progressCard}
-        >
-          <Text style={styles.progressEmoji}>📅</Text>
+        <View style={styles.progressCard}>
+          <View style={styles.progressIconCircle}>
+            <Text style={styles.progressEmoji}>📅</Text>
+          </View>
           <View style={styles.progressInfo}>
-            <Text style={styles.progressLabel}>Your Investigation Progress</Text>
+            <Text style={styles.progressLabel}>YOUR PROGRESS</Text>
             <Text style={styles.progressDay}>Day {day} of {totalDays}</Text>
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: `${(day / totalDays) * 100}%` }]} />
             </View>
             <Text style={styles.progressText}>
-              {totalDays - day} days remaining to solve the mystery
+              {totalDays - day} days left · Keep going! 💪
             </Text>
           </View>
-        </LinearGradient>
+        </View>
 
         {/* Calendar Title */}
         <View style={styles.calendarHeader}>
@@ -80,59 +82,73 @@ export default function CalendarScreen() {
 
         {/* Days Grid */}
         <View style={styles.daysGrid}>
-          {daysGrid.map((dayInfo) => (
-            <TouchableOpacity
-              key={dayInfo.day}
-              style={[
-                styles.dayCell,
-                dayInfo.isToday && styles.dayCellToday,
-                dayInfo.isCompleted && styles.dayCellCompleted,
-                dayInfo.isPast && !dayInfo.isCompleted && styles.dayCellMissed,
-                dayInfo.isFuture && styles.dayCellFuture,
-              ]}
-              activeOpacity={0.7}
-              disabled={dayInfo.isFuture}
-            >
-              <Text
+          {daysGrid.map((dayInfo) => {
+            const CellWrapper = dayInfo.isCompleted || dayInfo.isToday ? LinearGradient : View;
+            const gradientProps = dayInfo.isCompleted
+              ? { colors: ['#74896D', '#5A6B56'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }
+              : dayInfo.isToday
+              ? { colors: ['#FFE66D', '#F9DD57'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }
+              : {};
+
+            return (
+              <TouchableOpacity
+                key={dayInfo.day}
                 style={[
-                  styles.dayNumber,
-                  dayInfo.isToday && styles.dayNumberToday,
-                  dayInfo.isCompleted && styles.dayNumberCompleted,
-                  dayInfo.isFuture && styles.dayNumberFuture,
+                  styles.dayCell,
+                  dayInfo.isPast && !dayInfo.isCompleted && styles.dayCellMissed,
+                  dayInfo.isFuture && styles.dayCellFuture,
                 ]}
+                activeOpacity={0.7}
+                disabled={dayInfo.isFuture}
               >
-                {dayInfo.day}
-              </Text>
-              {dayInfo.isCompleted && (
-                <View style={styles.checkmarkContainer}>
-                  <Text style={styles.checkmark}>✓</Text>
-                </View>
-              )}
-              {dayInfo.isToday && !dayInfo.isCompleted && (
-                <View style={styles.todayDot} />
-              )}
-            </TouchableOpacity>
-          ))}
+                <CellWrapper
+                  {...gradientProps}
+                  style={styles.dayCellInner}
+                >
+                  <Text
+                    style={[
+                      styles.dayNumber,
+                      (dayInfo.isToday || dayInfo.isCompleted) && styles.dayNumberActive,
+                      dayInfo.isFuture && styles.dayNumberFuture,
+                    ]}
+                  >
+                    {dayInfo.day}
+                  </Text>
+                  {dayInfo.isCompleted && (
+                    <View style={styles.checkmarkContainer}>
+                      <Text style={styles.checkmark}>✓</Text>
+                    </View>
+                  )}
+                </CellWrapper>
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
         {/* Legend */}
         <View style={styles.legend}>
-          <Text style={styles.legendTitle}>Legend</Text>
+          <Text style={styles.legendTitle}>Color Guide</Text>
           <View style={styles.legendRow}>
             <View style={styles.legendItem}>
-              <View style={[styles.legendCircle, { backgroundColor: Colors.gold }]} />
+              <LinearGradient
+                colors={['#FFE66D', '#F9DD57']}
+                style={styles.legendCircle}
+              />
               <Text style={styles.legendText}>Today</Text>
             </View>
             <View style={styles.legendItem}>
-              <View style={[styles.legendCircle, { backgroundColor: Colors.primaryPurple }]} />
-              <Text style={styles.legendText}>Completed</Text>
+              <LinearGradient
+                colors={['#74896D', '#5A6B56']}
+                style={styles.legendCircle}
+              />
+              <Text style={styles.legendText}>Done ✓</Text>
             </View>
             <View style={styles.legendItem}>
-              <View style={[styles.legendCircle, { backgroundColor: Colors.red }]} />
+              <View style={[styles.legendCircle, { backgroundColor: Colors.white, opacity: 0.4 }]} />
               <Text style={styles.legendText}>Missed</Text>
             </View>
             <View style={styles.legendItem}>
-              <View style={[styles.legendCircle, { backgroundColor: Colors.border2 }]} />
+              <View style={[styles.legendCircle, { backgroundColor: Colors.white, opacity: 0.3 }]} />
               <Text style={styles.legendText}>Future</Text>
             </View>
           </View>
@@ -169,27 +185,26 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingHorizontal: 20,
     paddingTop: 22,
-    paddingBottom: 8,
-    backgroundColor: Colors.white,
-    ...Shadows.card,
+    paddingBottom: 16,
+    ...Shadows.cardMedium,
   },
   backButton: {
     width: 40,
     height: 40,
     borderRadius: 13,
-    backgroundColor: Colors.purpleTintBg,
+    backgroundColor: 'rgba(255,255,255,0.3)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   backText: {
     fontSize: 20,
-    color: Colors.primaryPurple,
+    color: Colors.white,
     fontFamily: Typography.bodyBold,
   },
   headerTitle: {
-    fontFamily: Typography.display,
+    fontFamily: Typography.displayBold,
     fontSize: Typography.size24,
-    color: Colors.textPrimary,
+    color: Colors.white,
   },
   content: {
     padding: 20,
@@ -197,6 +212,7 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   progressCard: {
+    backgroundColor: Colors.white,
     borderRadius: 20,
     padding: 20,
     flexDirection: 'row',
@@ -204,40 +220,48 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     ...Shadows.cardMedium,
   },
+  progressIconCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: Colors.goldTintBg,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   progressEmoji: {
-    fontSize: 44,
+    fontSize: 32,
   },
   progressInfo: {
     flex: 1,
     gap: 6,
   },
   progressLabel: {
-    fontFamily: Typography.bodyBold,
-    fontSize: Typography.size12,
-    color: 'rgba(255,255,255,0.9)',
-    letterSpacing: 0.5,
+    fontFamily: Typography.bodyExtraBold,
+    fontSize: Typography.size11,
+    color: Colors.textMuted,
+    letterSpacing: 1,
   },
   progressDay: {
     fontFamily: Typography.displayBold,
-    fontSize: Typography.size28,
-    color: Colors.white,
+    fontSize: Typography.size26,
+    color: Colors.primaryPurple,
   },
   progressBar: {
-    height: 8,
-    backgroundColor: 'rgba(255,255,255,0.3)',
+    height: 10,
+    backgroundColor: Colors.purpleTintBg,
     borderRadius: 999,
     overflow: 'hidden',
     marginTop: 4,
   },
   progressFill: {
     height: '100%',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.primaryPurple,
     borderRadius: 999,
   },
   progressText: {
     fontFamily: Typography.bodySemiBold,
-    fontSize: Typography.size12,
-    color: 'rgba(255,255,255,0.85)',
+    fontSize: Typography.size13,
+    color: Colors.textMuted,
     marginTop: 2,
   },
   calendarHeader: {
@@ -276,37 +300,29 @@ const styles = StyleSheet.create({
   dayCell: {
     width: '13%',
     aspectRatio: 1,
-    backgroundColor: Colors.border2,
     borderRadius: 14,
+    overflow: 'hidden',
+    ...Shadows.card,
+  },
+  dayCellInner: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: Colors.white,
     position: 'relative',
   },
-  dayCellToday: {
-    backgroundColor: Colors.gold,
-    borderWidth: 3,
-    borderColor: Colors.goldDark,
-  },
-  dayCellCompleted: {
-    backgroundColor: Colors.primaryPurple,
-  },
   dayCellMissed: {
-    backgroundColor: Colors.red,
-    opacity: 0.6,
+    opacity: 0.4,
   },
   dayCellFuture: {
-    backgroundColor: Colors.border3,
-    opacity: 0.5,
+    opacity: 0.3,
   },
   dayNumber: {
     fontFamily: Typography.displayBold,
     fontSize: Typography.size16,
-    color: Colors.textMuted,
+    color: Colors.textPrimary,
   },
-  dayNumberToday: {
-    color: Colors.white,
-  },
-  dayNumberCompleted: {
+  dayNumberActive: {
     color: Colors.white,
   },
   dayNumberFuture: {
@@ -314,27 +330,19 @@ const styles = StyleSheet.create({
   },
   checkmarkContainer: {
     position: 'absolute',
-    top: 2,
-    right: 2,
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: Colors.white,
+    top: 3,
+    right: 3,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.9)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkmark: {
-    fontSize: 12,
+    fontSize: 11,
     color: Colors.primaryPurple,
     fontWeight: 'bold',
-  },
-  todayDot: {
-    position: 'absolute',
-    bottom: 4,
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: Colors.white,
   },
   legend: {
     backgroundColor: Colors.white,
