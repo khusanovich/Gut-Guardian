@@ -83,21 +83,23 @@ export default function CalendarScreen() {
         {/* Days Grid */}
         <View style={styles.daysGrid}>
           {daysGrid.map((dayInfo) => {
-            const CellWrapper = dayInfo.isCompleted || dayInfo.isToday ? LinearGradient : View;
-            const gradientProps = dayInfo.isCompleted
-              ? { colors: ['#74896D', '#5A6B56'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }
-              : dayInfo.isToday
-              ? { colors: ['#FFE66D', '#F9DD57'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }
-              : {};
+            const CellWrapper = LinearGradient;
+            let gradientProps;
+
+            if (dayInfo.isCompleted) {
+              gradientProps = { colors: ['#74896D', '#5A6B56'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } };
+            } else if (dayInfo.isToday) {
+              gradientProps = { colors: ['#FFE66D', '#F9DD57'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } };
+            } else if (dayInfo.isPast && !dayInfo.isCompleted) {
+              gradientProps = { colors: ['#FFB6C1', '#FF8FA3'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } };
+            } else {
+              gradientProps = { colors: ['#E8F4F8', '#D4E9F2'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } };
+            }
 
             return (
               <TouchableOpacity
                 key={dayInfo.day}
-                style={[
-                  styles.dayCell,
-                  dayInfo.isPast && !dayInfo.isCompleted && styles.dayCellMissed,
-                  dayInfo.isFuture && styles.dayCellFuture,
-                ]}
+                style={styles.dayCell}
                 activeOpacity={0.7}
                 disabled={dayInfo.isFuture}
               >
@@ -109,6 +111,7 @@ export default function CalendarScreen() {
                     style={[
                       styles.dayNumber,
                       (dayInfo.isToday || dayInfo.isCompleted) && styles.dayNumberActive,
+                      (dayInfo.isPast && !dayInfo.isCompleted) && styles.dayNumberMissed,
                       dayInfo.isFuture && styles.dayNumberFuture,
                     ]}
                   >
@@ -144,11 +147,17 @@ export default function CalendarScreen() {
               <Text style={styles.legendText}>Done ✓</Text>
             </View>
             <View style={styles.legendItem}>
-              <View style={[styles.legendCircle, { backgroundColor: Colors.white, opacity: 0.4 }]} />
+              <LinearGradient
+                colors={['#FFB6C1', '#FF8FA3']}
+                style={styles.legendCircle}
+              />
               <Text style={styles.legendText}>Missed</Text>
             </View>
             <View style={styles.legendItem}>
-              <View style={[styles.legendCircle, { backgroundColor: Colors.white, opacity: 0.3 }]} />
+              <LinearGradient
+                colors={['#E8F4F8', '#D4E9F2']}
+                style={styles.legendCircle}
+              />
               <Text style={styles.legendText}>Future</Text>
             </View>
           </View>
@@ -308,14 +317,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.white,
     position: 'relative',
-  },
-  dayCellMissed: {
-    opacity: 0.4,
-  },
-  dayCellFuture: {
-    opacity: 0.3,
   },
   dayNumber: {
     fontFamily: Typography.displayBold,
@@ -325,8 +327,11 @@ const styles = StyleSheet.create({
   dayNumberActive: {
     color: Colors.white,
   },
+  dayNumberMissed: {
+    color: Colors.white,
+  },
   dayNumberFuture: {
-    color: Colors.textFaint,
+    color: '#7CA9BD',
   },
   checkmarkContainer: {
     position: 'absolute',

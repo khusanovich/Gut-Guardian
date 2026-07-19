@@ -10,7 +10,7 @@ export default function StoryScreen() {
 
   return (
     <LinearGradient
-      colors={['#A8E6CF', '#88D498', '#74896D']}
+      colors={['#A8E6CF', '#7FD1AE', '#6BC4A6']}
       locations={[0, 0.5, 1]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
