@@ -140,8 +140,8 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
     PanResponder.create({
       onStartShouldSetPanResponder: () => false,
       onMoveShouldSetPanResponder: (_evt, gestureState) => {
-        // Only start dragging if moved more than 5 pixels
-        return Math.abs(gestureState.dx) > 5 || Math.abs(gestureState.dy) > 5;
+        // Only start dragging if moved more than 10 pixels to avoid interference with clicks
+        return Math.abs(gestureState.dx) > 10 || Math.abs(gestureState.dy) > 10;
       },
       onPanResponderGrant: () => {
         pan.setOffset({
@@ -205,7 +205,6 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
           transform: [{ translateX: pan.x }, { translateY: pan.y }],
         },
       ]}
-      {...panResponder.panHandlers}
     >
       {/* Speech Bubble */}
       {bubbleVisible && (
@@ -223,37 +222,41 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
         </Animated.View>
       )}
 
-      {/* Interactive Character */}
-      <TouchableOpacity
-        onPress={handlePress}
-        activeOpacity={0.8}
+      {/* Interactive Character - Draggable wrapper */}
+      <Animated.View
         style={styles.characterContainer}
+        {...panResponder.panHandlers}
       >
-        <Animated.View
-          style={[
-            styles.character,
-            {
-              transform: [
-                { translateY: Animated.add(characterBounce.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0, -20],
-                }), float) },
-                { scale: breathe },
-                { rotate: rotation },
-              ],
-            },
-          ]}
+        <TouchableOpacity
+          onPress={handlePress}
+          activeOpacity={0.8}
         >
-          <Text style={styles.characterEmoji}>🕵️</Text>
+          <Animated.View
+            style={[
+              styles.character,
+              {
+                transform: [
+                  { translateY: Animated.add(characterBounce.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, -20],
+                  }), float) },
+                  { scale: breathe },
+                  { rotate: rotation },
+                ],
+              },
+            ]}
+          >
+            <Text style={styles.characterEmoji}>🕵️</Text>
 
-          {/* Thinking indicator when bubble hidden */}
-          {!bubbleVisible && (
-            <Animated.View style={styles.thinkingDots}>
-              <Text style={styles.dotsText}>💭</Text>
-            </Animated.View>
-          )}
-        </Animated.View>
-      </TouchableOpacity>
+            {/* Thinking indicator when bubble hidden */}
+            {!bubbleVisible && (
+              <Animated.View style={styles.thinkingDots}>
+                <Text style={styles.dotsText}>💭</Text>
+              </Animated.View>
+            )}
+          </Animated.View>
+        </TouchableOpacity>
+      </Animated.View>
     </Animated.View>
   );
 }
