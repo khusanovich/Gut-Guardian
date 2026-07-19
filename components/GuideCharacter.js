@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Animated, Easing, PanResponder } from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing, TouchableOpacity } from 'react-native';
 import { Colors, Typography, Spacing, Shadows } from '../constants/theme';
 
 export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
@@ -13,9 +13,6 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
   const characterRotate = React.useRef(new Animated.Value(0)).current;
   const breathe = React.useRef(new Animated.Value(1)).current;
   const float = React.useRef(new Animated.Value(0)).current;
-
-  // Draggable position
-  const pan = React.useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
 
   // Show bubble animation
   const showBubble = () => {
@@ -135,67 +132,6 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
     ]).start();
   };
 
-  // Pan responder for dragging
-  const panResponder = React.useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {
-        pan.setOffset({
-          x: pan.x._value,
-          y: pan.y._value,
-        });
-        pan.setValue({ x: 0, y: 0 });
-      },
-      onPanResponderMove: Animated.event(
-        [null, { dx: pan.x, dy: pan.y }],
-        { useNativeDriver: false }
-      ),
-      onPanResponderRelease: (_evt, gestureState) => {
-        // If barely moved (less than 5 pixels), treat as click, not drag
-        const didNotMove = Math.abs(gestureState.dx) < 5 && Math.abs(gestureState.dy) < 5;
-
-        if (didNotMove) {
-          // Reset position to before "drag"
-          pan.setOffset({
-            x: pan.x._offset,
-            y: pan.y._offset,
-          });
-          pan.setValue({ x: 0, y: 0 });
-          pan.flattenOffset();
-
-          // Trigger click handler
-          handlePress();
-        } else {
-          // Apply boundary constraints
-          pan.flattenOffset();
-
-          // Get screen dimensions (approximate safe bounds)
-          const maxX = 150;  // Right boundary
-          const minX = -150; // Left boundary
-          const maxY = 200;  // Down boundary
-          const minY = -300; // Up boundary
-
-          let finalX = pan.x._value;
-          let finalY = pan.y._value;
-
-          // Constrain to boundaries
-          if (finalX > maxX) finalX = maxX;
-          if (finalX < minX) finalX = minX;
-          if (finalY > maxY) finalY = maxY;
-          if (finalY < minY) finalY = minY;
-
-          // Animate to constrained position if needed
-          if (finalX !== pan.x._value || finalY !== pan.y._value) {
-            Animated.spring(pan, {
-              toValue: { x: finalX, y: finalY },
-              useNativeDriver: false,
-            }).start();
-          }
-        }
-      },
-    })
-  ).current;
-
   React.useEffect(() => {
     entranceAnimation();
     startBreathing();
@@ -234,14 +170,7 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
   });
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        {
-          transform: [{ translateX: pan.x }, { translateY: pan.y }],
-        },
-      ]}
-    >
+    <View style={styles.container}>
       {/* Speech Bubble */}
       {bubbleVisible && (
         <Animated.View
@@ -258,10 +187,11 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
         </Animated.View>
       )}
 
-      {/* Interactive Character - Draggable wrapper */}
-      <Animated.View
+      {/* Interactive Character */}
+      <TouchableOpacity
+        onPress={handlePress}
+        activeOpacity={0.8}
         style={styles.characterContainer}
-        {...panResponder.panHandlers}
       >
         <Animated.View
           style={[
@@ -287,8 +217,8 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
             </Animated.View>
           )}
         </Animated.View>
-      </Animated.View>
-    </Animated.View>
+      </TouchableOpacity>
+    </View>
   );
 }
 
