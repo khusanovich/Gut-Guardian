@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Animated, Easing, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import { Colors, Typography, Spacing, Shadows } from '../constants/theme';
 
 export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
@@ -151,7 +151,17 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
     }
   }, [message]);
 
-  const handlePress = () => {
+  if (!message) return null;
+
+  const rotation = characterRotate.interpolate({
+    inputRange: [-1, 0, 1],
+    outputRange: ['-12deg', '0deg', '12deg'],
+  });
+
+  const handlePress = (e) => {
+    // Prevent event bubbling
+    e.stopPropagation();
+
     setHasInteracted(true);
     waveAnimation();
 
@@ -162,35 +172,12 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
     }
   };
 
-  if (!message) return null;
-
-  const rotation = characterRotate.interpolate({
-    inputRange: [-1, 0, 1],
-    outputRange: ['-12deg', '0deg', '12deg'],
-  });
-
   return (
     <View style={styles.container}>
-      {/* Speech Bubble */}
-      {bubbleVisible && (
-        <Animated.View
-          style={[
-            styles.bubble,
-            {
-              opacity: bubbleOpacity,
-              transform: [{ translateX: bubbleSlide }],
-            },
-          ]}
-        >
-          <View style={styles.arrow} />
-          <Text style={styles.message}>{message}</Text>
-        </Animated.View>
-      )}
-
-      {/* Interactive Character */}
-      <TouchableOpacity
-        onPress={handlePress}
-        activeOpacity={0.8}
+      {/* Interactive Character - Click to toggle bubble */}
+      <Animated.View
+        onStartShouldSetResponder={() => true}
+        onResponderRelease={handlePress}
         style={styles.characterContainer}
       >
         <Animated.View
@@ -217,7 +204,23 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
             </Animated.View>
           )}
         </Animated.View>
-      </TouchableOpacity>
+      </Animated.View>
+
+      {/* Speech Bubble */}
+      {bubbleVisible && (
+        <Animated.View
+          style={[
+            styles.bubble,
+            {
+              opacity: bubbleOpacity,
+              transform: [{ translateX: bubbleSlide }],
+            },
+          ]}
+        >
+          <View style={styles.arrow} />
+          <Text style={styles.message}>{message}</Text>
+        </Animated.View>
+      )}
     </View>
   );
 }
@@ -225,10 +228,10 @@ export default function GuideCharacter({ message, autoHideDelay = 5000 }) {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 110,
-    left: 20,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
+    top: 80,
+    right: 20,
+    flexDirection: 'row-reverse',
+    alignItems: 'flex-start',
     gap: 12,
     zIndex: 1000,
     pointerEvents: 'box-none',
@@ -265,22 +268,22 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderRadius: 16,
     padding: 14,
-    marginRight: 8,
+    marginLeft: 8,
     maxWidth: 250,
     ...Shadows.cardMedium,
   },
   arrow: {
     position: 'absolute',
-    right: -8,
-    bottom: 12,
+    left: -8,
+    top: 12,
     width: 0,
     height: 0,
     borderTopWidth: 8,
     borderTopColor: 'transparent',
     borderBottomWidth: 8,
     borderBottomColor: 'transparent',
-    borderLeftWidth: 10,
-    borderLeftColor: Colors.white,
+    borderRightWidth: 10,
+    borderRightColor: Colors.white,
   },
   message: {
     fontFamily: Typography.bodySemiBold,
